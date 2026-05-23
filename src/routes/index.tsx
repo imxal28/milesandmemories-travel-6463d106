@@ -158,7 +158,7 @@ function Index() {
             />
             <img
               src={expCulture}
-              alt="Traveler exploring a quiet temple at dawn"
+              alt="Artisan weaving handloom textiles on a wooden loom"
               loading="lazy"
               width={800}
               height={1024}
