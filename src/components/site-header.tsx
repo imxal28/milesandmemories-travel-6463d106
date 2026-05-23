@@ -10,10 +10,10 @@ const links = [
 
 export function SiteHeader() {
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 md:py-5 bg-background/80 backdrop-blur-md">
-      <Link to="/" className="flex items-center gap-4" aria-label="Miles & Memories — Home">
-        <img src={logo} alt="Miles & Memories" width={96} height={96} className="h-16 w-16 md:h-20 md:w-20 object-contain" />
-        <span className="font-serif text-2xl md:text-4xl tracking-wide text-foreground">Miles &amp; Memories</span>
+    <nav className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-12 h-20 md:h-24 bg-background/80 backdrop-blur-md">
+      <Link to="/" className="flex items-center gap-3 md:gap-4" aria-label="Miles & Memories — Home">
+        <img src={logo} alt="Miles & Memories" width={96} height={96} className="h-12 w-12 md:h-16 md:w-16 object-contain shrink-0" />
+        <span className="font-serif text-xl md:text-3xl tracking-wide text-foreground leading-none">Miles &amp; Memories</span>
       </Link>
 
       <div className="hidden md:flex gap-10 text-[11px] uppercase tracking-[0.2em] font-medium">
