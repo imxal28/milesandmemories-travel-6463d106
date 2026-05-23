@@ -48,7 +48,7 @@
   --radius: 0.25rem;
 
   /* Brand palette — earthy neutrals + terracotta accent */
-  --background: oklch(0.972 0.012 80);          /* warm ivory #F9F7F2 */
+  --background: oklch(0.962 0.028 84);          /* warm cream / soft buttery yellow */
   --foreground: oklch(0.30 0.005 60);           /* deep warm ink #2D2D2D */
   --ink: oklch(0.30 0.005 60);
   --stone-warm: oklch(0.84 0.018 70);           /* warm taupe #D2C9BF */
