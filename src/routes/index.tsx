@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { destinations } from "@/lib/destinations";
 import hero from "@/assets/hero-himalaya.jpg";
 import expCulinary from "@/assets/exp-culinary.jpg";
-import expCulture from "@/assets/exp-textile.jpg";
+import expCulture from "@/assets/exp-heritage.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -158,7 +158,7 @@ function Index() {
             />
             <img
               src={expCulture}
-              alt="Artisan weaving handloom textiles on a wooden loom"
+              alt="Heritage ghats and boats along the river at dawn"
               loading="lazy"
               width={800}
               height={1024}
