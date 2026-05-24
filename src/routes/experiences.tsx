@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import expCulinary from "@/assets/exp-culinary.jpg";
-import expCulture from "@/assets/exp-culture.jpg";
+import expCulture from "@/assets/exp-heritage.jpg";
 import bhutan from "@/assets/dest-bhutan.jpg";
 import vietnam from "@/assets/dest-vietnam.jpg";
 import nepal from "@/assets/dest-nepal.jpg";
