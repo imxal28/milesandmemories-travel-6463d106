@@ -158,7 +158,7 @@ function Index() {
             />
             <img
               src={expCulture}
-              alt="Artisan weaving handloom textiles on a wooden loom"
+              alt="Heritage ghats and boats along the river at dawn"
               loading="lazy"
               width={800}
               height={1024}
