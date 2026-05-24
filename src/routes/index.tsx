@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { destinations } from "@/lib/destinations";
 import hero from "@/assets/hero-himalaya.jpg";
 import expCulinary from "@/assets/exp-culinary.jpg";
-import expCulture from "@/assets/exp-textile.jpg";
+import expCulture from "@/assets/exp-heritage.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
