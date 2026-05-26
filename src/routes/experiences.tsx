@@ -3,7 +3,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import expCulinary from "@/assets/exp-culinary.jpg";
 import expCulture from "@/assets/exp-heritage-varanasi.jpg";
-import bhutan from "@/assets/dest-bhutan.jpg";
+import maldivesVilla from "@/assets/exp-maldives-villa.jpg";
 import vietnam from "@/assets/dest-vietnam.jpg";
 import nepal from "@/assets/dest-nepal.jpg";
 
@@ -41,7 +41,7 @@ const experiences = [
   },
   {
     title: "Slow Luxury Escapes",
-    image: bhutan,
+    image: maldivesVilla,
     body:
       "Boutique stays chosen for character over count. Days that breathe. Itineraries that resist the checklist in favor of stillness, light, and the quiet pleasure of being somewhere fully.",
   },
