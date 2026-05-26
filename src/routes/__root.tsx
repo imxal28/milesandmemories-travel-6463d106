@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Singapore-based bespoke travel curator designing culture- and food-led journeys to India, Nepal, Bhutan, Sri Lanka, and Vietnam.",
       },
       { name: "author", content: "Miles & Memories" },
-      { property: "og:title", content: "Miles & Memories — Bespoke Travel Curation" },
+      { property: "og:title", content: "Miles & Memories — Bespoke Travel, Curated to a T" },
       {
         property: "og:description",
         content:
@@ -85,6 +85,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Miles & Memories — Bespoke Travel, Curated to a T" },
+      { name: "description", content: "Miles and Memories curates bespoke luxury travel experiences focused on culture and cuisine." },
+      { property: "og:description", content: "Miles and Memories curates bespoke luxury travel experiences focused on culture and cuisine." },
+      { name: "twitter:description", content: "Miles and Memories curates bespoke luxury travel experiences focused on culture and cuisine." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/699bfc84-22c7-4ad2-a6a4-072d6e78f760/id-preview-dcaa1c37--dde9a2e9-57a2-4ccd-a5c6-1c85dbbe3009.lovable.app-1779765776549.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/699bfc84-22c7-4ad2-a6a4-072d6e78f760/id-preview-dcaa1c37--dde9a2e9-57a2-4ccd-a5c6-1c85dbbe3009.lovable.app-1779765776549.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
