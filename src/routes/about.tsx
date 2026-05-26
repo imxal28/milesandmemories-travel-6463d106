@@ -2,6 +2,40 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import founder from "@/assets/about-founder.jpg";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+const testimonials = [
+  {
+    quote:
+      "From the first call, it felt like they truly understood how we wanted to travel. Every transfer, every reservation — flawless. We didn't lift a finger.",
+    name: "Ananya & Rohan Mehta",
+    trip: "Honeymoon in the Maldives",
+  },
+  {
+    quote:
+      "I've planned dozens of offsites and none came close. The team mapped our itinerary to our company culture down to the smallest detail.",
+    name: "Karan Bhatia",
+    trip: "Startup Offsite, Bhutan",
+  },
+  {
+    quote:
+      "As a solo traveler, safety and rhythm matter to me. Miles & Memories gave me a journey that felt personal, considered, and beautifully paced.",
+    name: "Priya Sharma",
+    trip: "Solo Trip, Vietnam",
+  },
+  {
+    quote:
+      "The research that went into our family itinerary was incredible. Three generations, three pace preferences — and somehow everyone was happy.",
+    name: "The Kapoor Family",
+    trip: "Multi-gen trip, Sri Lanka",
+  },
+];
 
 export const Route = createFileRoute("/about")({
   head: () => ({
