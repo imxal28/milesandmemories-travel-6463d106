@@ -130,7 +130,41 @@ function About() {
         </div>
       </section>
 
+      <section className="px-6 md:px-12 py-24 border-t border-border bg-muted/20">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
+            In Their Words
+          </p>
+          <h2 className="font-serif text-4xl md:text-5xl mb-16 max-w-2xl">
+            Stories from travelers we've planned for.
+          </h2>
+
+          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+            <CarouselContent className="-ml-6">
+              {testimonials.map((t) => (
+                <CarouselItem key={t.name} className="pl-6 md:basis-1/2">
+                  <figure className="h-full bg-background border border-border p-8 md:p-10 flex flex-col justify-between">
+                    <blockquote className="font-serif text-2xl md:text-3xl italic leading-snug text-foreground/90 mb-8">
+                      "{t.quote}"
+                    </blockquote>
+                    <figcaption>
+                      <div className="text-sm font-semibold tracking-wide">{t.name}</div>
+                      <div className="text-xs uppercase tracking-[0.2em] text-foreground/60 mt-1">
+                        {t.trip}
+                      </div>
+                    </figcaption>
+                  </figure>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
+        </div>
+      </section>
+
       <section className="px-6 md:px-12 pb-32">
+
         <div className="bg-muted/40 p-12 md:p-20 flex flex-col items-center text-center">
           <h2 className="font-serif text-4xl md:text-5xl mb-6">Begin with a conversation.</h2>
           <Link
