@@ -47,7 +47,7 @@ const experiences = [
   },
   {
     title: "Retreats & Restorative Travel",
-    image: nepal,
+    image: baliRetreat,
     body:
       "Mountain wellness, monastic quiet, and considered programs of rest. For travelers seeking to return, rather than simply to go.",
   },
