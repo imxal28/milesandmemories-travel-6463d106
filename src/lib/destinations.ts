@@ -16,6 +16,20 @@ export type Destination = {
 
 export const destinations: Destination[] = [
   {
+    slug: "india",
+    name: "India",
+    tagline: "Infinite Wonder",
+    image: india,
+    description:
+      "Palatial heritage, market alleys spiced with cardamom and rose, and stillness in places few travelers think to look. We design India as a deeply personal narrative.",
+    highlights: [
+      "Private dining at royal residences",
+      "Heritage hotels selected for character, not flash",
+      "Old-city walks with historians and home cooks",
+    ],
+    suited: "Returning travelers who want India beyond the headlines.",
+  },
+  {
     slug: "bhutan",
     name: "Bhutan",
     tagline: "The Last Shangri-La",
@@ -30,18 +44,18 @@ export const destinations: Destination[] = [
     suited: "Travelers seeking stillness, sacred landscapes, and slow luxury.",
   },
   {
-    slug: "sri-lanka",
-    name: "Sri Lanka",
-    tagline: "Island Heritage",
-    image: srilanka,
+    slug: "nepal",
+    name: "Nepal",
+    tagline: "Mountain Sanctum",
+    image: nepal,
     description:
-      "Tea-clad highlands, colonial planters' bungalows, and wild southern coasts — an island compact enough to feel intimate, layered enough to feel infinite.",
+      "Mountain air, monastery bells, and small lodges set against the snow line. A journey for travelers who measure luxury in quiet, altitude, and arrival.",
     highlights: [
-      "Heritage bungalow stays in the hill country",
-      "Private safari at first light in Yala",
-      "Curated Galle Fort food and craft walks",
+      "Boutique mountain lodges with full-board service",
+      "Private heritage walks through Kathmandu Valley",
+      "Restorative retreats in the foothills",
     ],
-    suited: "Couples and discerning travelers drawn to landscape and heritage.",
+    suited: "Travelers drawn to mountains, monasteries, and meaningful retreat.",
   },
   {
     slug: "vietnam",
@@ -58,31 +72,18 @@ export const destinations: Destination[] = [
     suited: "Food-led travelers and curious culture seekers.",
   },
   {
-    slug: "india",
-    name: "India",
-    tagline: "Infinite Wonder",
-    image: india,
+    slug: "sri-lanka",
+    name: "Sri Lanka",
+    tagline: "Island Heritage",
+    image: srilanka,
     description:
-      "Palatial heritage, market alleys spiced with cardamom and rose, and stillness in places few travelers think to look. We design India as a deeply personal narrative.",
+      "Tea-clad highlands, colonial planters' bungalows, and wild southern coasts — an island compact enough to feel intimate, layered enough to feel infinite.",
     highlights: [
-      "Private dining at royal residences",
-      "Heritage hotels selected for character, not flash",
-      "Old-city walks with historians and home cooks",
+      "Heritage bungalow stays in the hill country",
+      "Private safari at first light in Yala",
+      "Curated Galle Fort food and craft walks",
     ],
-    suited: "Returning travelers who want India beyond the headlines.",
+    suited: "Couples and discerning travelers drawn to landscape and heritage.",
   },
-  {
-    slug: "nepal",
-    name: "Nepal",
-    tagline: "Mountain Sanctum",
-    image: nepal,
-    description:
-      "Mountain air, monastery bells, and small lodges set against the snow line. A journey for travelers who measure luxury in quiet, altitude, and arrival.",
-    highlights: [
-      "Boutique mountain lodges with full-board service",
-      "Private heritage walks through Kathmandu Valley",
-      "Restorative retreats in the foothills",
-    ],
-    suited: "Travelers drawn to mountains, monasteries, and meaningful retreat.",
-  },
+
 ];
