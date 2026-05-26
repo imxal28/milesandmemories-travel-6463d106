@@ -5,7 +5,7 @@ import expCulinary from "@/assets/exp-culinary.jpg";
 import expCulture from "@/assets/exp-heritage-varanasi.jpg";
 import maldivesVilla from "@/assets/exp-maldives-villa.jpg";
 import vietnam from "@/assets/dest-vietnam.jpg";
-import nepal from "@/assets/dest-nepal.jpg";
+import baliRetreat from "@/assets/exp-bali-retreat.jpg";
 
 export const Route = createFileRoute("/experiences")({
   head: () => ({
@@ -47,7 +47,7 @@ const experiences = [
   },
   {
     title: "Retreats & Restorative Travel",
-    image: nepal,
+    image: baliRetreat,
     body:
       "Mountain wellness, monastic quiet, and considered programs of rest. For travelers seeking to return, rather than simply to go.",
   },
