@@ -68,7 +68,7 @@ function Experiences() {
         <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
           Signature Experiences
         </p>
-        <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8 max-w-3xl">
+        <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8">
           Designed around <span className="italic">the traveler,</span> not a template.
         </h1>
         <p className="max-w-xl text-lg text-foreground/70 leading-relaxed">
