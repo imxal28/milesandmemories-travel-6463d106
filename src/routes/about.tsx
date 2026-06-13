@@ -1,4 +1,6 @@
+
 import { createFileRoute, Link } from "@tanstack/react-router";
+import Autoplay from "embla-carousel-autoplay";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import founder from "@/assets/about-founder.jpg";
@@ -13,27 +15,27 @@ import {
 const testimonials = [
   {
     quote:
-      "From the first call, it felt like they truly understood how we wanted to travel. Every transfer, every reservation — flawless. We didn't lift a finger.",
-    name: "Ananya & Rohan Mehta",
-    trip: "Honeymoon in the Maldives",
-  },
-  {
-    quote:
-      "I've planned dozens of offsites and none came close. The team mapped our itinerary to our company culture down to the smallest detail.",
-    name: "Karan Bhatia",
-    trip: "Startup Offsite, Bhutan",
-  },
-  {
-    quote:
-      "As a solo traveler, safety and rhythm matter to me. Miles & Memories gave me a journey that felt personal, considered, and beautifully paced.",
-    name: "Priya Sharma",
+      "Laxmi is the perfect planner for a solo travelling woman — she goes the extra mile to keep you safe while curating an experience that feels truly authentic to your travel style.",
+    name: "Vinisha N.",
     trip: "Solo Trip, Vietnam",
   },
   {
     quote:
-      "The research that went into our family itinerary was incredible. Three generations, three pace preferences — and somehow everyone was happy.",
-    name: "The Kapoor Family",
-    trip: "Multi-gen trip, Sri Lanka",
+      "Professional, well-organized and attentive from start to finish. Laxmi's prompt responses and personalised recommendations made the entire trip smooth, stress-free and genuinely memorable.",
+    name: "Radhika Bhatia",
+    trip: "Bespoke Getaway",
+  },
+  {
+    quote:
+      "Laxmi planned a Bhutan itinerary perfectly paced for three generations — from a senior citizen to my teenage son. The guide and driver were excellent, and every detail was thoughtfully handled.",
+    name: "Malini Srivats",
+    trip: "Multi-gen Family Trip, Bhutan",
+  },
+  {
+    quote:
+      "She orchestrated an exceptional Bali trip that catered to both my elderly parents with arthritis and my younger sister. Not a single hiccup — just a seamless, thoughtfully curated experience for everyone.",
+    name: "Mona Nik",
+    trip: "Family Holiday, Bali",
   },
 ];
 
@@ -139,7 +141,19 @@ function About() {
             Stories from travelers we've planned for.
           </h2>
 
-          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+                stopOnInteraction: false,
+                stopOnMouseEnter: false,
+                stopOnFocusIn: false,
+              }),
+            ]}
+            className="w-full"
+          >
+
             <CarouselContent className="-ml-6">
               {testimonials.map((t) => (
                 <CarouselItem key={t.name} className="pl-6 md:basis-1/2">
