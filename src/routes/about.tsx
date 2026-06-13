@@ -1,4 +1,4 @@
-import { useRef } from "react";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import Autoplay from "embla-carousel-autoplay";
 import { SiteHeader } from "@/components/site-header";
