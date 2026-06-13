@@ -141,7 +141,19 @@ function About() {
             Stories from travelers we've planned for.
           </h2>
 
-          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+                stopOnInteraction: false,
+                stopOnMouseEnter: false,
+                stopOnFocusIn: false,
+              }),
+            ]}
+            className="w-full"
+          >
+
             <CarouselContent className="-ml-6">
               {testimonials.map((t) => (
                 <CarouselItem key={t.name} className="pl-6 md:basis-1/2">
