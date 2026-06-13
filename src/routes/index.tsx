@@ -171,7 +171,7 @@ function Index() {
       {/* Philosophy */}
       <section className="py-32 px-6 md:px-12 text-center">
         <div className="max-w-4xl mx-auto">
-          <h3 className="text-[11px] uppercase tracking-[0.4em] font-semibold text-accent mb-8">
+          <h3 className="text-[22px] uppercase tracking-[0.4em] font-semibold text-accent mb-8">
             Our Philosophy
           </h3>
           <p className="font-serif text-3xl md:text-4xl italic leading-snug mb-12">
