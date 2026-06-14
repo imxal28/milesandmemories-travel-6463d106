@@ -68,8 +68,8 @@ function Index() {
             A Singapore Atelier
           </p>
           <p className="font-serif text-3xl md:text-4xl italic leading-snug text-foreground">
-            Miles & Memories is a bespoke travel atelier designing private journeys for travelers
-            who value beauty, culture, and the quiet luxury of being looked after.
+            Miles & Memories is a bespoke travel atelier designing private journeys for travellers
+            who value experience, culture, and the quiet luxury of being looked after.
           </p>
         </div>
       </section>
