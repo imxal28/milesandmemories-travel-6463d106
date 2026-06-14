@@ -72,10 +72,10 @@ function About() {
         <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
           About Us
         </p>
-        <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8 max-w-3xl">
+        <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8">
           We go beyond bookings. <span className="italic">We craft travel stories.</span>
         </h1>
-        <p className="max-w-xl text-lg text-foreground/70 leading-relaxed">
+        <p className="text-lg text-foreground/70 leading-relaxed">
           At Miles &amp; Memories, every journey begins with listening — to your rhythm, your
           curiosity, and the kind of memories you want to come home with.
         </p>
