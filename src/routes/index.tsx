@@ -38,7 +38,7 @@ function Index() {
             </h1>
             <p className="max-w-md text-lg text-foreground/80 leading-relaxed mb-12">
               Bespoke travel curation for the discerning leisure traveler. From the high peaks of
-              Bhutan to the hidden kitchens of Vietnam, we design every detail to a T.
+              Bhutan to the hidden kitchens of India, we design every detail to a T.
             </p>
             <Link
               to="/inquiry"
