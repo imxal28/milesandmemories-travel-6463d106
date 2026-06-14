@@ -12,7 +12,7 @@ export function SiteHeader() {
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-12 h-20 md:h-24 bg-background/80 backdrop-blur-md">
       <Link to="/" className="flex items-center gap-3 md:gap-4" aria-label="Miles & Memories — Home">
-        <img src={logo} alt="Miles & Memories" width={96} height={96} className="h-12 w-12 md:h-16 md:w-16 object-contain shrink-0" />
+        <img src={logo} alt="Miles & Memories" width={192} height={192} className="h-24 w-24 md:h-32 md:w-32 object-contain shrink-0" />
         <span className="font-serif text-2xl md:text-4xl tracking-wide text-foreground leading-none">Miles &amp; Memories</span>
       </Link>
 
