@@ -71,7 +71,7 @@ function Experiences() {
         <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8">
           Designed around <span className="italic">the traveler,</span> not a template.
         </h1>
-        <p className="max-w-xl text-lg text-foreground/70 leading-relaxed">
+        <p className="text-lg text-foreground/70 leading-relaxed">
           Five ways of traveling with us. Each can stand alone or be woven together into a single
           private itinerary across one or more destinations.
         </p>
