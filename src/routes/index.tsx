@@ -29,7 +29,7 @@ function Index() {
 
       {/* Hero */}
       <section className="px-6 md:px-12 pt-8 md:pt-12 pb-24">
-        <div className="grid grid-cols-12 gap-8 items-end">
+        <div className="grid grid-cols-12 gap-8 items-start">
           <div className="col-span-12 lg:col-span-7">
             <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8">
               Journeys,
