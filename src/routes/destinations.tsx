@@ -28,17 +28,19 @@ function Destinations() {
       <SiteHeader />
 
       <section className="px-6 md:px-12 pt-12 pb-20">
-        <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
-          The Collection
-        </p>
-        <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8">
-          Five geographies, <span className="italic">infinite nuance.</span>
-        </h1>
-        <p className="text-lg text-foreground/70 leading-relaxed">
-          Our expertise is intentionally focused. We design journeys only where our roots run deep
-          — and we travel each region ourselves, year after year, to keep our recommendations
-          honest.
-        </p>
+        <div className="max-w-7xl mx-auto">
+          <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
+            The Collection
+          </p>
+          <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8">
+            Five geographies, <span className="italic">infinite nuance.</span>
+          </h1>
+          <p className="text-lg text-foreground/70 leading-relaxed">
+            Our expertise is intentionally focused. We design journeys only where our roots run deep
+            — and we travel each region ourselves, year after year, to keep our recommendations
+            honest.
+          </p>
+        </div>
       </section>
 
       <div>
