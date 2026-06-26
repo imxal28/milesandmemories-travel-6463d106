@@ -27,8 +27,8 @@ function Destinations() {
     <div className="bg-background text-foreground">
       <SiteHeader />
 
-      <section className="pl-0 pr-6 md:pl-0 md:pr-12 pt-12 pb-20">
-        <div className="max-w-7xl">
+      <section className="px-6 md:px-12 pt-12 pb-20">
+        <div className="max-w-7xl mx-auto">
           <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
             The Collection
           </p>
@@ -48,10 +48,10 @@ function Destinations() {
           <section
             key={d.slug}
             id={d.slug}
-            className="pl-0 pr-6 md:pl-0 md:pr-12 py-20 border-t border-border scroll-mt-24"
+            className="px-6 md:px-12 py-20 border-t border-border scroll-mt-24"
           >
             <div
-              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center max-w-7xl ${
+              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center max-w-7xl mx-auto ${
                 i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""
               }`}
             >
