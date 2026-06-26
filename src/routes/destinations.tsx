@@ -27,8 +27,8 @@ function Destinations() {
     <div className="bg-background text-foreground">
       <SiteHeader />
 
-      <section className="pl-0 pr-6 md:pl-0 md:pr-12 pt-12 pb-20">
-        <div className="max-w-7xl">
+      <section className="px-6 md:px-12 pt-12 pb-20">
+        <div className="max-w-7xl mx-auto">
           <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
             The Collection
           </p>
