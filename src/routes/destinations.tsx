@@ -51,7 +51,7 @@ function Destinations() {
             className="pl-0 pr-6 md:pl-0 md:pr-12 py-20 border-t border-border scroll-mt-24"
           >
             <div
-              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center max-w-7xl mx-auto ${
+              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center max-w-7xl ${
                 i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""
               }`}
             >
