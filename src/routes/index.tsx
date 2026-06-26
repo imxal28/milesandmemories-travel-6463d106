@@ -48,6 +48,16 @@ function Index() {
                 Begin Your Journey
               </span>
             </Link>
+
+            <div className="mt-16">
+              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-4">
+                A Singapore Atelier
+              </p>
+              <p className="font-serif text-2xl md:text-3xl italic leading-snug text-foreground">
+                Miles & Memories is a bespoke travel atelier designing private journeys for travellers
+                who value experience, culture, and the quiet luxury of being looked after.
+              </p>
+            </div>
           </div>
           <div className="col-span-12 lg:col-span-5">
             <img
