@@ -48,6 +48,16 @@ function Index() {
                 Begin Your Journey
               </span>
             </Link>
+
+            <div className="mt-16">
+              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-4">
+                A Singapore Atelier
+              </p>
+              <p className="font-serif text-2xl md:text-3xl italic leading-snug text-foreground">
+                Miles & Memories is a bespoke travel atelier designing private journeys for travellers
+                who value experience, culture, and the quiet luxury of being looked after.
+              </p>
+            </div>
           </div>
           <div className="col-span-12 lg:col-span-5">
             <img
@@ -61,18 +71,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Brand intro */}
-      <section className="px-6 md:px-12 py-20 border-t border-border">
-        <div className="max-w-4xl">
-          <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
-            A Singapore Atelier
-          </p>
-          <p className="font-serif text-3xl md:text-4xl italic leading-snug text-foreground">
-            Miles & Memories is a bespoke travel atelier designing private journeys for travellers
-            who value experience, culture, and the quiet luxury of being looked after.
-          </p>
-        </div>
-      </section>
 
       {/* Destinations */}
       <section className="px-6 md:px-12 py-24 border-t border-border">
