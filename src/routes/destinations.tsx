@@ -48,10 +48,10 @@ function Destinations() {
           <section
             key={d.slug}
             id={d.slug}
-            className="pl-0 pr-6 md:pl-0 md:pr-12 py-20 border-t border-border scroll-mt-24"
+            className="px-6 md:px-12 py-20 border-t border-border scroll-mt-24"
           >
             <div
-              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center max-w-7xl ${
+              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center max-w-7xl mx-auto ${
                 i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""
               }`}
             >
