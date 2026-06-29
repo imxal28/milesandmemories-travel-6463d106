@@ -28,19 +28,17 @@ function Destinations() {
       <SiteHeader />
 
       <section className="px-6 md:px-12 pt-12 pb-20">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
-            The Collection
-          </p>
-          <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8">
-            Five geographies, <span className="italic">infinite nuance.</span>
-          </h1>
-          <p className="text-lg text-foreground/70 leading-relaxed">
-            Our expertise is intentionally focused. We design journeys only where our roots run deep
-            — and we travel each region ourselves, year after year, to keep our recommendations
-            honest.
-          </p>
-        </div>
+        <p className="text-[11px] uppercase tracking-[0.3em] font-semibold text-accent mb-6">
+          The Collection
+        </p>
+        <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-8">
+          Five geographies, <span className="italic">infinite nuance.</span>
+        </h1>
+        <p className="text-lg text-foreground/70 leading-relaxed">
+          Our expertise is intentionally focused. We design journeys only where our roots run deep
+          — and we travel each region ourselves, year after year, to keep our recommendations
+          honest.
+        </p>
       </section>
 
       <div>
@@ -51,7 +49,7 @@ function Destinations() {
             className="px-6 md:px-12 py-20 border-t border-border scroll-mt-24"
           >
             <div
-              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center max-w-7xl mx-auto ${
+              className={`grid grid-cols-12 gap-8 lg:gap-16 items-center ${
                 i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""
               }`}
             >
