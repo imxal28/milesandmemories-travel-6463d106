@@ -38,7 +38,7 @@ function Inquiry() {
           Enquiry Form
         </p>
         <h1 className="font-serif text-5xl md:text-7xl leading-[0.95] mb-6 max-w-3xl">
-          Curate <span className="italic">your trip.</span>
+          Curate <span className="italic">your trip</span>
         </h1>
         <p className="max-w-xl text-lg text-foreground/70 leading-relaxed">
           A few details to begin. We'll be in touch personally within two working days to continue
