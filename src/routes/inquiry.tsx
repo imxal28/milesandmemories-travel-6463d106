@@ -1,9 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo, useRef } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { submitInquiry } from "@/lib/inquiry.functions";
+
 
 export const Route = createFileRoute("/inquiry")({
   head: () => ({
@@ -33,8 +39,11 @@ function Inquiry() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [travelType, setTravelType] = useState<string>("");
   const [otherTravelType, setOtherTravelType] = useState<string>("");
+  const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  const [dateTo, setDateTo] = useState<Date | undefined>();
   const renderedAt = useMemo(() => Date.now(), []);
   const honeypotRef = useRef<HTMLInputElement>(null);
+
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,11 +54,18 @@ function Inquiry() {
     }
     const form = new FormData(e.currentTarget);
 
-    const travelDatesValue = String(form.get("travelDates") ?? "").trim();
-    if (!travelDatesValue) {
-      setErrorMsg("Please enter your travel dates.");
+    if (!dateFrom || !dateTo) {
+      setErrorMsg("Please select your travel dates.");
       return;
     }
+    if (dateTo < dateFrom) {
+      setErrorMsg("Return date must be on or after the departure date.");
+      return;
+    }
+    const travelDatesFrom = format(dateFrom, "yyyy-MM-dd");
+    const travelDatesTo = format(dateTo, "yyyy-MM-dd");
+    const travelDatesValue = `${travelDatesFrom} to ${travelDatesTo}`;
+
 
     const personsRaw = String(form.get("persons") ?? "").trim();
     const personsValue = Number(personsRaw);
@@ -72,6 +88,8 @@ function Inquiry() {
           phone: String(form.get("phone") ?? "").trim(),
           destination: String(form.get("destination") ?? "").trim(),
           travelDates: travelDatesValue,
+          travelDatesFrom,
+          travelDatesTo,
           travelType: travelType === "Other" ? "Other" : travelType,
           travelTypeOther: travelType === "Other" ? otherTravelType.trim() : undefined,
           persons: personsValue,
@@ -201,14 +219,24 @@ function Inquiry() {
               </Field>
 
               <Field label="Dates of travel — from and to" required>
-                <input
-                  required
-                  name="travelDates"
-                  type="text"
-                  placeholder="e.g. 12 Oct 2026 – 24 Oct 2026"
-                  className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <DateField
+                    value={dateFrom}
+                    onChange={(d) => {
+                      setDateFrom(d);
+                      if (d && dateTo && dateTo < d) setDateTo(undefined);
+                    }}
+                    placeholder="Departure date"
+                  />
+                  <DateField
+                    value={dateTo}
+                    onChange={setDateTo}
+                    placeholder="Return date"
+                    disabled={dateFrom ? { before: dateFrom } : undefined}
+                  />
+                </div>
               </Field>
+
 
               <Field label="What kind of travel are you planning?" required>
                 <div className="flex flex-col gap-3 pt-2">
@@ -338,3 +366,46 @@ function Field({
     </label>
   );
 }
+
+function DateField({
+  value,
+  onChange,
+  placeholder,
+  disabled,
+}: {
+  value: Date | undefined;
+  onChange: (d: Date | undefined) => void;
+  placeholder: string;
+  disabled?: React.ComponentProps<typeof Calendar>["disabled"];
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="w-full flex items-center justify-between gap-3 bg-transparent border-b border-foreground/20 py-3 text-lg focus:border-accent focus:outline-none transition-colors text-left"
+        >
+          <span className={cn(value ? "text-foreground" : "text-foreground/30")}>
+            {value ? format(value, "d MMM yyyy") : placeholder}
+          </span>
+          <CalendarIcon className="h-5 w-5 text-foreground/40" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0 bg-background" align="start">
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={(d) => {
+            onChange(d);
+            if (d) setOpen(false);
+          }}
+          disabled={disabled}
+          initialFocus
+          className={cn("p-3 pointer-events-auto")}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
