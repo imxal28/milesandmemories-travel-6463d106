@@ -54,11 +54,18 @@ function Inquiry() {
     }
     const form = new FormData(e.currentTarget);
 
-    const travelDatesValue = String(form.get("travelDates") ?? "").trim();
-    if (!travelDatesValue) {
-      setErrorMsg("Please enter your travel dates.");
+    if (!dateFrom || !dateTo) {
+      setErrorMsg("Please select your travel dates.");
       return;
     }
+    if (dateTo < dateFrom) {
+      setErrorMsg("Return date must be on or after the departure date.");
+      return;
+    }
+    const travelDatesFrom = format(dateFrom, "yyyy-MM-dd");
+    const travelDatesTo = format(dateTo, "yyyy-MM-dd");
+    const travelDatesValue = `${travelDatesFrom} to ${travelDatesTo}`;
+
 
     const personsRaw = String(form.get("persons") ?? "").trim();
     const personsValue = Number(personsRaw);
