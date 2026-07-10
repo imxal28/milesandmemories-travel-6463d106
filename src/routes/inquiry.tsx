@@ -88,6 +88,8 @@ function Inquiry() {
           phone: String(form.get("phone") ?? "").trim(),
           destination: String(form.get("destination") ?? "").trim(),
           travelDates: travelDatesValue,
+          travelDatesFrom,
+          travelDatesTo,
           travelType: travelType === "Other" ? "Other" : travelType,
           travelTypeOther: travelType === "Other" ? otherTravelType.trim() : undefined,
           persons: personsValue,
