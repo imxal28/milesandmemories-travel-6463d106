@@ -21,26 +21,37 @@ const optionalNoLinks = (max: number) =>
     .refine((v) => !linkPattern.test(v), { message: "Links are not allowed" })
     .optional();
 
-const inquirySchema = z.object({
-  name: z.string().trim().min(1, "Please enter your name.").max(200),
-  email: z.string().trim().email("Please enter a valid email address.").max(320),
-  phone: z.string().trim().min(3, "Please enter your phone number.").max(40),
-  destination: noLinks(1, 200),
-  travelDates: noLinks(1, 200),
-  travelType: z.string().trim().min(1, "Please select the kind of travel.").max(60),
-  travelTypeOther: z.string().trim().max(120).optional(),
-  persons: z.coerce
-    .number({ invalid_type_error: "Please enter the number of travellers." })
-    .int("Please enter a whole number of travellers.")
-    .min(1, "Please enter at least 1 traveller.")
-    .max(100),
-  childrenAges: optionalNoLinks(200),
-  budget: noLinks(1, 200),
-  notes: optionalNoLinks(2000),
-  // Anti-spam
-  company: z.string().max(0).optional(),
-  renderedAt: z.number().int().positive(),
-});
+const isoDate = (msg: string) =>
+  z.string().regex(/^\d{4}-\d{2}-\d{2}$/, msg);
+
+const inquirySchema = z
+  .object({
+    name: z.string().trim().min(1, "Please enter your name.").max(200),
+    email: z.string().trim().email("Please enter a valid email address.").max(320),
+    phone: z.string().trim().min(3, "Please enter your phone number.").max(40),
+    destination: noLinks(1, 200),
+    travelDatesFrom: isoDate("Please select a departure date."),
+    travelDatesTo: isoDate("Please select a return date."),
+    travelDates: z.string().trim().min(1).max(200),
+    travelType: z.string().trim().min(1, "Please select the kind of travel.").max(60),
+    travelTypeOther: z.string().trim().max(120).optional(),
+    persons: z.coerce
+      .number({ invalid_type_error: "Please enter the number of travellers." })
+      .int("Please enter a whole number of travellers.")
+      .min(1, "Please enter at least 1 traveller.")
+      .max(100),
+    childrenAges: optionalNoLinks(200),
+    budget: noLinks(1, 200),
+    notes: optionalNoLinks(2000),
+    // Anti-spam
+    company: z.string().max(0).optional(),
+    renderedAt: z.number().int().positive(),
+  })
+  .refine((v) => v.travelDatesTo >= v.travelDatesFrom, {
+    path: ["travelDatesTo"],
+    message: "Return date must be on or after the departure date.",
+  });
+
 
 type InquiryInput = z.infer<typeof inquirySchema>;
 
