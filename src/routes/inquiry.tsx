@@ -44,21 +44,40 @@ function Inquiry() {
       return;
     }
     const form = new FormData(e.currentTarget);
+
+    const travelDatesValue = String(form.get("travelDates") ?? "").trim();
+    if (!travelDatesValue) {
+      setErrorMsg("Please enter your travel dates.");
+      return;
+    }
+
+    const personsRaw = String(form.get("persons") ?? "").trim();
+    const personsValue = Number(personsRaw);
+    if (!personsRaw || !Number.isFinite(personsValue) || personsValue < 1) {
+      setErrorMsg("Please enter at least 1 traveller.");
+      return;
+    }
+
+    if (travelType === "Other" && !otherTravelType.trim()) {
+      setErrorMsg("Please describe the kind of travel you're planning.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       await submit({
         data: {
-          name: String(form.get("name") ?? ""),
-          email: String(form.get("email") ?? ""),
-          phone: String(form.get("phone") ?? ""),
-          destination: String(form.get("destination") ?? ""),
-          travelDates: String(form.get("travelDates") ?? ""),
+          name: String(form.get("name") ?? "").trim(),
+          email: String(form.get("email") ?? "").trim(),
+          phone: String(form.get("phone") ?? "").trim(),
+          destination: String(form.get("destination") ?? "").trim(),
+          travelDates: travelDatesValue,
           travelType: travelType === "Other" ? "Other" : travelType,
-          travelTypeOther: travelType === "Other" ? otherTravelType : undefined,
-          persons: Number(form.get("persons") ?? 0),
-          childrenAges: String(form.get("childrenAges") ?? "") || undefined,
-          budget: String(form.get("budget") ?? ""),
-          notes: String(form.get("notes") ?? "") || undefined,
+          travelTypeOther: travelType === "Other" ? otherTravelType.trim() : undefined,
+          persons: personsValue,
+          childrenAges: String(form.get("childrenAges") ?? "").trim() || undefined,
+          budget: String(form.get("budget") ?? "").trim(),
+          notes: String(form.get("notes") ?? "").trim() || undefined,
           company: honeypotRef.current?.value ?? "",
           renderedAt,
         },
@@ -66,11 +85,19 @@ function Inquiry() {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setErrorMsg(
-        err instanceof Error && err.message
-          ? err.message
-          : "Something went wrong. Please try again.",
-      );
+      const raw = err instanceof Error ? err.message : "";
+      // Server may return a stringified error payload; pull out a friendly message.
+      let friendly = raw;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          if (typeof parsed.message === "string") friendly = parsed.message;
+          else if (Array.isArray(parsed) && parsed[0]?.message) friendly = parsed[0].message;
+        }
+      } catch {
+        /* not JSON — use raw message */
+      }
+      setErrorMsg(friendly || "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }

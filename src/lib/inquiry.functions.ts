@@ -22,14 +22,18 @@ const optionalNoLinks = (max: number) =>
     .optional();
 
 const inquirySchema = z.object({
-  name: z.string().trim().min(1).max(200),
-  email: z.string().trim().email().max(320),
-  phone: z.string().trim().min(3).max(40),
+  name: z.string().trim().min(1, "Please enter your name.").max(200),
+  email: z.string().trim().email("Please enter a valid email address.").max(320),
+  phone: z.string().trim().min(3, "Please enter your phone number.").max(40),
   destination: noLinks(1, 200),
   travelDates: noLinks(1, 200),
-  travelType: z.string().trim().min(1).max(60),
+  travelType: z.string().trim().min(1, "Please select the kind of travel.").max(60),
   travelTypeOther: z.string().trim().max(120).optional(),
-  persons: z.number().int().min(1).max(100),
+  persons: z.coerce
+    .number({ invalid_type_error: "Please enter the number of travellers." })
+    .int("Please enter a whole number of travellers.")
+    .min(1, "Please enter at least 1 traveller.")
+    .max(100),
   childrenAges: optionalNoLinks(200),
   budget: noLinks(1, 200),
   notes: optionalNoLinks(2000),
@@ -41,7 +45,14 @@ const inquirySchema = z.object({
 type InquiryInput = z.infer<typeof inquirySchema>;
 
 export const submitInquiry = createServerFn({ method: "POST" })
-  .inputValidator((raw: unknown): InquiryInput => inquirySchema.parse(raw))
+  .inputValidator((raw: unknown): InquiryInput => {
+    const result = inquirySchema.safeParse(raw);
+    if (!result.success) {
+      const first = result.error.issues[0];
+      throw new Error(first?.message ?? "Please check the form and try again.");
+    }
+    return result.data;
+  })
   .handler(async ({ data }) => {
     // Honeypot
     if (data.company && data.company.length > 0) {
