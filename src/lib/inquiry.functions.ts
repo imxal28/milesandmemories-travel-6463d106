@@ -3,34 +3,45 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
 
-const linkPattern = /(https?:\/\/|www\.|<a\s|\[url=|\bmarkdown:|\bhref=)/i;
+const linkPattern = /(https?:\/\/|www\.|<a\s|\[url=|\bhref=)/i;
 
-const noLinks = (max: number) =>
+const noLinks = (min: number, max: number) =>
+  z
+    .string()
+    .trim()
+    .min(min)
+    .max(max)
+    .refine((v) => !linkPattern.test(v), { message: "Links are not allowed" });
+
+const optionalNoLinks = (max: number) =>
   z
     .string()
     .trim()
     .max(max)
-    .refine((v) => !linkPattern.test(v), { message: "Links are not allowed" });
+    .refine((v) => !linkPattern.test(v), { message: "Links are not allowed" })
+    .optional();
 
 const inquirySchema = z.object({
   name: z.string().trim().min(1).max(200),
   email: z.string().trim().email().max(320),
   phone: z.string().trim().min(3).max(40),
-  destination: noLinks(200).min(1),
-  travelDates: noLinks(200).min(1),
+  destination: noLinks(1, 200),
+  travelDates: noLinks(1, 200),
   travelType: z.string().trim().min(1).max(60),
-  travelTypeOther: z.string().trim().max(120).optional().or(z.literal("")),
+  travelTypeOther: z.string().trim().max(120).optional(),
   persons: z.number().int().min(1).max(100),
-  childrenAges: noLinks(200).optional().or(z.literal("")),
-  budget: noLinks(200).min(1),
-  notes: noLinks(2000).optional().or(z.literal("")),
+  childrenAges: optionalNoLinks(200),
+  budget: noLinks(1, 200),
+  notes: optionalNoLinks(2000),
   // Anti-spam
-  company: z.string().max(0, { message: "Spam detected" }).optional().or(z.literal("")),
+  company: z.string().max(0).optional(),
   renderedAt: z.number().int().positive(),
 });
 
+type InquiryInput = z.infer<typeof inquirySchema>;
+
 export const submitInquiry = createServerFn({ method: "POST" })
-  .inputValidator((raw: unknown) => inquirySchema.parse(raw))
+  .inputValidator((raw: unknown): InquiryInput => inquirySchema.parse(raw))
   .handler(async ({ data }) => {
     // Honeypot
     if (data.company && data.company.length > 0) {
@@ -57,11 +68,11 @@ export const submitInquiry = createServerFn({ method: "POST" })
       destination: data.destination,
       travel_dates: data.travelDates,
       travel_type: data.travelType,
-      travel_type_other: data.travelTypeOther || null,
+      travel_type_other: data.travelTypeOther ? data.travelTypeOther : null,
       persons: data.persons,
-      children_ages: data.childrenAges || null,
+      children_ages: data.childrenAges ? data.childrenAges : null,
       budget: data.budget,
-      notes: data.notes || null,
+      notes: data.notes ? data.notes : null,
     });
 
     if (error) {
