@@ -366,3 +366,46 @@ function Field({
     </label>
   );
 }
+
+function DateField({
+  value,
+  onChange,
+  placeholder,
+  disabled,
+}: {
+  value: Date | undefined;
+  onChange: (d: Date | undefined) => void;
+  placeholder: string;
+  disabled?: React.ComponentProps<typeof Calendar>["disabled"];
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="w-full flex items-center justify-between gap-3 bg-transparent border-b border-foreground/20 py-3 text-lg focus:border-accent focus:outline-none transition-colors text-left"
+        >
+          <span className={cn(value ? "text-foreground" : "text-foreground/30")}>
+            {value ? format(value, "d MMM yyyy") : placeholder}
+          </span>
+          <CalendarIcon className="h-5 w-5 text-foreground/40" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0 bg-background" align="start">
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={(d) => {
+            onChange(d);
+            if (d) setOpen(false);
+          }}
+          disabled={disabled}
+          initialFocus
+          className={cn("p-3 pointer-events-auto")}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
