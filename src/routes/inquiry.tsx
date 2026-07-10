@@ -219,14 +219,24 @@ function Inquiry() {
               </Field>
 
               <Field label="Dates of travel — from and to" required>
-                <input
-                  required
-                  name="travelDates"
-                  type="text"
-                  placeholder="e.g. 12 Oct 2026 – 24 Oct 2026"
-                  className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <DateField
+                    value={dateFrom}
+                    onChange={(d) => {
+                      setDateFrom(d);
+                      if (d && dateTo && dateTo < d) setDateTo(undefined);
+                    }}
+                    placeholder="Departure date"
+                  />
+                  <DateField
+                    value={dateTo}
+                    onChange={setDateTo}
+                    placeholder="Return date"
+                    disabled={dateFrom ? { before: dateFrom } : undefined}
+                  />
+                </div>
               </Field>
+
 
               <Field label="What kind of travel are you planning?" required>
                 <div className="flex flex-col gap-3 pt-2">
