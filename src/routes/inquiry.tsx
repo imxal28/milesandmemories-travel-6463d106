@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useMemo, useRef } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { submitInquiry } from "@/lib/inquiry.functions";
 
 export const Route = createFileRoute("/inquiry")({
   head: () => ({
@@ -25,9 +27,54 @@ export const Route = createFileRoute("/inquiry")({
 const travelTypes = ["Couple", "Family", "Solo", "Friends"];
 
 function Inquiry() {
+  const submit = useServerFn(submitInquiry);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [travelType, setTravelType] = useState<string>("");
   const [otherTravelType, setOtherTravelType] = useState<string>("");
+  const renderedAt = useMemo(() => Date.now(), []);
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setErrorMsg(null);
+    if (!travelType) {
+      setErrorMsg("Please select the kind of travel you're planning.");
+      return;
+    }
+    const form = new FormData(e.currentTarget);
+    setSubmitting(true);
+    try {
+      await submit({
+        data: {
+          name: String(form.get("name") ?? ""),
+          email: String(form.get("email") ?? ""),
+          phone: String(form.get("phone") ?? ""),
+          destination: String(form.get("destination") ?? ""),
+          travelDates: String(form.get("travelDates") ?? ""),
+          travelType: travelType === "Other" ? "Other" : travelType,
+          travelTypeOther: travelType === "Other" ? otherTravelType : undefined,
+          persons: Number(form.get("persons") ?? 0),
+          childrenAges: String(form.get("childrenAges") ?? "") || undefined,
+          budget: String(form.get("budget") ?? ""),
+          notes: String(form.get("notes") ?? "") || undefined,
+          company: honeypotRef.current?.value ?? "",
+          renderedAt,
+        },
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(
+        err instanceof Error && err.message
+          ? err.message
+          : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className="bg-background text-foreground">
@@ -60,16 +107,36 @@ function Inquiry() {
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSubmitted(true);
-              }}
-              className="space-y-12"
-            >
+            <form onSubmit={handleSubmit} className="space-y-12" noValidate>
+              {/* Honeypot: hidden from real users, tempting to bots */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "-10000px",
+                  top: "auto",
+                  width: 1,
+                  height: 1,
+                  overflow: "hidden",
+                }}
+              >
+                <label>
+                  Company
+                  <input
+                    ref={honeypotRef}
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    defaultValue=""
+                  />
+                </label>
+              </div>
+
               <Field label="Email" required>
                 <input
                   required
+                  name="email"
                   type="email"
                   placeholder="Your email"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
@@ -79,6 +146,7 @@ function Inquiry() {
               <Field label="Phone number" required>
                 <input
                   required
+                  name="phone"
                   type="tel"
                   placeholder="Your answer"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
@@ -88,6 +156,7 @@ function Inquiry() {
               <Field label="Name" required>
                 <input
                   required
+                  name="name"
                   type="text"
                   placeholder="Your answer"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
@@ -97,6 +166,7 @@ function Inquiry() {
               <Field label="Which destination are you considering?" required>
                 <input
                   required
+                  name="destination"
                   type="text"
                   placeholder="Your answer"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
@@ -106,6 +176,7 @@ function Inquiry() {
               <Field label="Dates of travel — from and to" required>
                 <input
                   required
+                  name="travelDates"
                   type="text"
                   placeholder="e.g. 12 Oct 2026 – 24 Oct 2026"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
@@ -122,7 +193,6 @@ function Inquiry() {
                         value={t}
                         checked={travelType === t}
                         onChange={() => setTravelType(t)}
-                        required
                         className="accent-[color:var(--accent)] w-4 h-4"
                       />
                       <span>{t}</span>
@@ -154,8 +224,10 @@ function Inquiry() {
               <Field label="How many persons travelling?" required>
                 <input
                   required
+                  name="persons"
                   type="number"
                   min={1}
+                  max={100}
                   placeholder="Your answer"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
                 />
@@ -163,6 +235,7 @@ function Inquiry() {
 
               <Field label="If children are travelling, please specify ages">
                 <input
+                  name="childrenAges"
                   type="text"
                   placeholder="Your answer"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
@@ -175,6 +248,7 @@ function Inquiry() {
               >
                 <input
                   required
+                  name="budget"
                   type="text"
                   placeholder="Your answer"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
@@ -183,18 +257,26 @@ function Inquiry() {
 
               <Field label="Are there any other specific requests? (Such as must-visit locations, must-do activities, dietary choices, etc.)">
                 <textarea
+                  name="notes"
                   rows={4}
                   placeholder="Your answer"
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-base placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors resize-none"
                 />
               </Field>
 
+              {errorMsg && (
+                <p className="text-sm text-accent" role="alert">
+                  {errorMsg}
+                </p>
+              )}
+
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="px-12 py-5 bg-foreground text-background text-[11px] uppercase tracking-[0.3em] font-bold hover:bg-accent transition-colors"
+                  disabled={submitting}
+                  className="px-12 py-5 bg-foreground text-background text-[11px] uppercase tracking-[0.3em] font-bold hover:bg-accent transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Submit Enquiry
+                  {submitting ? "Sending…" : "Submit Enquiry"}
                 </button>
                 <p className="mt-4 text-xs text-foreground/50 italic">
                   We respond personally within two working days.
