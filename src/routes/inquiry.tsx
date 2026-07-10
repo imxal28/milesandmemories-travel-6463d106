@@ -39,8 +39,11 @@ function Inquiry() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [travelType, setTravelType] = useState<string>("");
   const [otherTravelType, setOtherTravelType] = useState<string>("");
+  const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  const [dateTo, setDateTo] = useState<Date | undefined>();
   const renderedAt = useMemo(() => Date.now(), []);
   const honeypotRef = useRef<HTMLInputElement>(null);
+
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
