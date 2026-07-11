@@ -148,7 +148,9 @@ function Inquiry() {
       } catch {
         /* not JSON — use raw message */
       }
-      setErrorMsg(friendly || "Something went wrong. Please try again.");
+      const msg = friendly || "Something went wrong. Please try again.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
