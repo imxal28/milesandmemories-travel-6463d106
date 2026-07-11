@@ -49,34 +49,66 @@ function Inquiry() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMsg(null);
-    if (!travelType) {
-      setErrorMsg("Please select the kind of travel you're planning.");
-      return;
-    }
     const form = new FormData(e.currentTarget);
 
+    const focusField = (name: string) => {
+      const el = e.currentTarget.querySelector<HTMLElement>(`[name="${name}"]`);
+      el?.focus();
+    };
+    const fail = (msg: string, name?: string) => {
+      toast.error(msg);
+      if (name) focusField(name);
+    };
+
+    const required: Array<{ name: string; label: string }> = [
+      { name: "email", label: "email" },
+      { name: "phone", label: "phone number" },
+      { name: "name", label: "name" },
+      { name: "destination", label: "destination" },
+    ];
+    for (const f of required) {
+      if (!String(form.get(f.name) ?? "").trim()) {
+        fail(`Please enter your ${f.label}.`, f.name);
+        return;
+      }
+    }
+
+    const emailValue = String(form.get("email") ?? "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+      fail("Please enter a valid email address.", "email");
+      return;
+    }
+
     if (!dateFrom || !dateTo) {
-      setErrorMsg("Please select your travel dates.");
+      toast.error("Please select your travel dates.");
       return;
     }
     if (dateTo < dateFrom) {
-      setErrorMsg("Return date must be on or after the departure date.");
+      toast.error("Return date must be on or after the departure date.");
       return;
     }
     const travelDatesFrom = format(dateFrom, "yyyy-MM-dd");
     const travelDatesTo = format(dateTo, "yyyy-MM-dd");
     const travelDatesValue = `${travelDatesFrom} to ${travelDatesTo}`;
 
+    if (!travelType) {
+      toast.error("Please choose the kind of travel you're planning.");
+      return;
+    }
+    if (travelType === "Other" && !otherTravelType.trim()) {
+      toast.error("Please describe the kind of travel you're planning.");
+      return;
+    }
 
     const personsRaw = String(form.get("persons") ?? "").trim();
     const personsValue = Number(personsRaw);
     if (!personsRaw || !Number.isFinite(personsValue) || personsValue < 1) {
-      setErrorMsg("Please enter at least 1 traveller.");
+      fail("Please enter at least 1 traveller.", "persons");
       return;
     }
 
-    if (travelType === "Other" && !otherTravelType.trim()) {
-      setErrorMsg("Please describe the kind of travel you're planning.");
+    if (!String(form.get("budget") ?? "").trim()) {
+      fail("Please enter your per-night budget.", "budget");
       return;
     }
 
