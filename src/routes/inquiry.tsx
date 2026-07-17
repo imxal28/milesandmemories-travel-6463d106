@@ -9,8 +9,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { submitInquiry } from "@/lib/inquiry.functions";
-import { toast } from "sonner";
-
 
 export const Route = createFileRoute("/inquiry")({
   head: () => ({
@@ -33,11 +31,25 @@ export const Route = createFileRoute("/inquiry")({
 
 const travelTypes = ["Couple", "Family", "Solo", "Friends"];
 
+type FieldErrors = Partial<Record<
+  | "email"
+  | "phone"
+  | "name"
+  | "destination"
+  | "travelDates"
+  | "travelType"
+  | "travelTypeOther"
+  | "persons"
+  | "budget"
+  | "form",
+  string
+>>;
+
 function Inquiry() {
   const submit = useServerFn(submitInquiry);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FieldErrors>({});
   const [travelType, setTravelType] = useState<string>("");
   const [otherTravelType, setOtherTravelType] = useState<string>("");
   const [dateFrom, setDateFrom] = useState<Date | undefined>();
@@ -45,90 +57,72 @@ function Inquiry() {
   const renderedAt = useMemo(() => Date.now(), []);
   const honeypotRef = useRef<HTMLInputElement>(null);
 
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setErrorMsg(null);
     const form = new FormData(e.currentTarget);
+    const nextErrors: FieldErrors = {};
 
-    const focusField = (name: string) => {
-      const el = e.currentTarget.querySelector<HTMLElement>(`[name="${name}"]`);
-      el?.focus();
-    };
-    const fail = (msg: string, name?: string) => {
-      toast.error(msg);
-      if (name) focusField(name);
-    };
+    const val = (n: string) => String(form.get(n) ?? "").trim();
 
-    const required: Array<{ name: string; label: string }> = [
-      { name: "email", label: "email" },
-      { name: "phone", label: "phone number" },
-      { name: "name", label: "name" },
-      { name: "destination", label: "destination" },
-    ];
-    for (const f of required) {
-      if (!String(form.get(f.name) ?? "").trim()) {
-        fail(`Please enter your ${f.label}.`, f.name);
-        return;
-      }
-    }
+    if (!val("email")) nextErrors.email = "Please enter your email.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("email")))
+      nextErrors.email = "Please enter a valid email address.";
 
-    const emailValue = String(form.get("email") ?? "").trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
-      fail("Please enter a valid email address.", "email");
-      return;
-    }
+    if (!val("phone")) nextErrors.phone = "Please enter your phone number.";
+    if (!val("name")) nextErrors.name = "Please enter your name.";
+    if (!val("destination"))
+      nextErrors.destination = "Please tell us which destination you're considering.";
 
     if (!dateFrom || !dateTo) {
-      toast.error("Please select your travel dates.");
-      return;
+      nextErrors.travelDates = "Please select your travel dates.";
+    } else if (dateTo < dateFrom) {
+      nextErrors.travelDates = "Return date must be on or after the departure date.";
     }
-    if (dateTo < dateFrom) {
-      toast.error("Return date must be on or after the departure date.");
-      return;
-    }
-    const travelDatesFrom = format(dateFrom, "yyyy-MM-dd");
-    const travelDatesTo = format(dateTo, "yyyy-MM-dd");
-    const travelDatesValue = `${travelDatesFrom} to ${travelDatesTo}`;
 
     if (!travelType) {
-      toast.error("Please choose the kind of travel you're planning.");
-      return;
-    }
-    if (travelType === "Other" && !otherTravelType.trim()) {
-      toast.error("Please describe the kind of travel you're planning.");
-      return;
+      nextErrors.travelType = "Please choose the kind of travel you're planning.";
+    } else if (travelType === "Other" && !otherTravelType.trim()) {
+      nextErrors.travelTypeOther = "Please describe the kind of travel you're planning.";
     }
 
-    const personsRaw = String(form.get("persons") ?? "").trim();
+    const personsRaw = val("persons");
     const personsValue = Number(personsRaw);
     if (!personsRaw || !Number.isFinite(personsValue) || personsValue < 1) {
-      fail("Please enter at least 1 traveller.", "persons");
+      nextErrors.persons = "Please enter at least 1 traveller.";
+    }
+
+    if (!val("budget")) nextErrors.budget = "Please enter your per-night budget.";
+
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      const firstKey = Object.keys(nextErrors)[0];
+      const el = e.currentTarget.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+      el?.focus();
       return;
     }
 
-    if (!String(form.get("budget") ?? "").trim()) {
-      fail("Please enter your per-night budget.", "budget");
-      return;
-    }
+    setErrors({});
+    const travelDatesFrom = format(dateFrom!, "yyyy-MM-dd");
+    const travelDatesTo = format(dateTo!, "yyyy-MM-dd");
+    const travelDatesValue = `${travelDatesFrom} to ${travelDatesTo}`;
 
     setSubmitting(true);
     try {
       await submit({
         data: {
-          name: String(form.get("name") ?? "").trim(),
-          email: String(form.get("email") ?? "").trim(),
-          phone: String(form.get("phone") ?? "").trim(),
-          destination: String(form.get("destination") ?? "").trim(),
+          name: val("name"),
+          email: val("email"),
+          phone: val("phone"),
+          destination: val("destination"),
           travelDates: travelDatesValue,
           travelDatesFrom,
           travelDatesTo,
           travelType: travelType === "Other" ? "Other" : travelType,
           travelTypeOther: travelType === "Other" ? otherTravelType.trim() : undefined,
           persons: personsValue,
-          childrenAges: String(form.get("childrenAges") ?? "").trim() || undefined,
-          budget: String(form.get("budget") ?? "").trim(),
-          notes: String(form.get("notes") ?? "").trim() || undefined,
+          childrenAges: val("childrenAges") || undefined,
+          budget: val("budget"),
+          notes: val("notes") || undefined,
           company: honeypotRef.current?.value ?? "",
           renderedAt,
         },
@@ -137,7 +131,6 @@ function Inquiry() {
     } catch (err) {
       console.error(err);
       const raw = err instanceof Error ? err.message : "";
-      // Server may return a stringified error payload; pull out a friendly message.
       let friendly = raw;
       try {
         const parsed = JSON.parse(raw);
@@ -146,11 +139,9 @@ function Inquiry() {
           else if (Array.isArray(parsed) && parsed[0]?.message) friendly = parsed[0].message;
         }
       } catch {
-        /* not JSON — use raw message */
+        /* not JSON */
       }
-      const msg = friendly || "Something went wrong. Please try again.";
-      setErrorMsg(msg);
-      toast.error(msg);
+      setErrors({ form: friendly || "Something went wrong. Please try again." });
     } finally {
       setSubmitting(false);
     }
@@ -188,7 +179,6 @@ function Inquiry() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-12" noValidate>
-              {/* Honeypot: hidden from real users, tempting to bots */}
               <div
                 aria-hidden="true"
                 style={{
@@ -213,47 +203,47 @@ function Inquiry() {
                 </label>
               </div>
 
-              <Field label="Email" required>
+              <Field label="Email" required error={errors.email}>
                 <input
-                  required
                   name="email"
                   type="email"
                   placeholder="Your email"
+                  aria-invalid={!!errors.email}
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
                 />
               </Field>
 
-              <Field label="Phone number" required>
+              <Field label="Phone number" required error={errors.phone}>
                 <input
-                  required
                   name="phone"
                   type="tel"
                   placeholder="Your answer"
+                  aria-invalid={!!errors.phone}
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
                 />
               </Field>
 
-              <Field label="Name" required>
+              <Field label="Name" required error={errors.name}>
                 <input
-                  required
                   name="name"
                   type="text"
                   placeholder="Your answer"
+                  aria-invalid={!!errors.name}
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
                 />
               </Field>
 
-              <Field label="Which destination are you considering?" required>
+              <Field label="Which destination are you considering?" required error={errors.destination}>
                 <input
-                  required
                   name="destination"
                   type="text"
                   placeholder="Your answer"
+                  aria-invalid={!!errors.destination}
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
                 />
               </Field>
 
-              <Field label="Dates of travel — from and to" required>
+              <Field label="Dates of travel — from and to" required error={errors.travelDates}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <DateField
                     value={dateFrom}
@@ -272,8 +262,7 @@ function Inquiry() {
                 </div>
               </Field>
 
-
-              <Field label="What kind of travel are you planning?" required>
+              <Field label="What kind of travel are you planning?" required error={errors.travelType}>
                 <div className="flex flex-col gap-3 pt-2">
                   {travelTypes.map((t) => (
                     <label key={t} className="flex items-center gap-3 cursor-pointer text-base">
@@ -308,17 +297,22 @@ function Inquiry() {
                       className="flex-1 bg-transparent border-b border-foreground/20 py-1 text-base focus:border-accent focus:outline-none transition-colors"
                     />
                   </label>
+                  {errors.travelTypeOther && (
+                    <p className="text-xs text-red-600 mt-1" role="alert">
+                      {errors.travelTypeOther}
+                    </p>
+                  )}
                 </div>
               </Field>
 
-              <Field label="How many persons travelling?" required>
+              <Field label="How many persons travelling?" required error={errors.persons}>
                 <input
-                  required
                   name="persons"
                   type="number"
                   min={1}
                   max={100}
                   placeholder="Your answer"
+                  aria-invalid={!!errors.persons}
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
                 />
               </Field>
@@ -335,12 +329,13 @@ function Inquiry() {
               <Field
                 label="Is there a requested per-night budget? (Please specify currency.)"
                 required
+                error={errors.budget}
               >
                 <input
-                  required
                   name="budget"
                   type="text"
                   placeholder="Your answer"
+                  aria-invalid={!!errors.budget}
                   className="w-full bg-transparent border-b border-foreground/20 py-3 text-lg placeholder:text-foreground/30 focus:border-accent focus:outline-none transition-colors"
                 />
               </Field>
@@ -354,9 +349,9 @@ function Inquiry() {
                 />
               </Field>
 
-              {errorMsg && (
-                <p className="text-sm text-accent" role="alert">
-                  {errorMsg}
+              {errors.form && (
+                <p className="text-sm text-red-600" role="alert">
+                  {errors.form}
                 </p>
               )}
 
@@ -385,20 +380,29 @@ function Inquiry() {
 function Field({
   label,
   required,
+  error,
   children,
 }: {
   label: string;
   required?: boolean;
+  error?: string;
   children: React.ReactNode;
 }) {
   return (
-    <label className="block">
-      <span className="block text-[11px] uppercase tracking-[0.25em] font-semibold text-foreground/70 mb-3">
-        {label}
-        {required && <span className="text-accent"> *</span>}
-      </span>
-      {children}
-    </label>
+    <div className="block">
+      <label className="block">
+        <span className="block text-[11px] uppercase tracking-[0.25em] font-semibold text-foreground/70 mb-3">
+          {label}
+          {required && <span className="text-accent"> *</span>}
+        </span>
+        {children}
+      </label>
+      {error && (
+        <p className="text-xs text-red-600 mt-2" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -443,4 +447,3 @@ function DateField({
     </Popover>
   );
 }
-
