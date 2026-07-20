@@ -55,75 +55,6 @@ const inquirySchema = z
 
 type InquiryInput = z.infer<typeof inquirySchema>;
 
-const SENDER_DOMAIN = "sales.milesandmemories.travel";
-const FROM_DOMAIN = "milesandmemories.travel";
-const SITE_NAME = "Miles and Memories";
-const NOTIFICATION_RECIPIENT = "milesandmemories@hotmail.com";
-
-async function enqueueInquiryNotification(data: InquiryInput) {
-  try {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const React = await import("react");
-    const { render } = await import("@react-email/render");
-    const { template } = await import("@/lib/email-templates/inquiry-notification");
-
-    const templateData = {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      destination: data.destination,
-      travelDates: data.travelDates,
-      travelType: data.travelType,
-      travelTypeOther: data.travelTypeOther ?? null,
-      persons: data.persons,
-      childrenAges: data.childrenAges ?? null,
-      budget: data.budget,
-      notes: data.notes ?? null,
-      submittedAt: new Date().toISOString(),
-    };
-
-    const element = React.createElement(template.component, templateData);
-    const html = await render(element);
-    const text = await render(element, { plainText: true });
-    const subject =
-      typeof template.subject === "function"
-        ? template.subject(templateData)
-        : template.subject;
-
-    const messageId = crypto.randomUUID();
-
-    await supabaseAdmin.from("email_send_log").insert({
-      message_id: messageId,
-      template_name: "inquiry-notification",
-      recipient_email: NOTIFICATION_RECIPIENT,
-      status: "pending",
-    });
-
-    const { error } = await supabaseAdmin.rpc("enqueue_email", {
-      queue_name: "transactional_emails",
-      payload: {
-        message_id: messageId,
-        to: NOTIFICATION_RECIPIENT,
-        from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
-        sender_domain: SENDER_DOMAIN,
-        subject,
-        html,
-        text,
-        purpose: "transactional",
-        label: "inquiry-notification",
-        idempotency_key: messageId,
-        queued_at: new Date().toISOString(),
-      },
-    });
-
-    if (error) {
-      console.error("Failed to enqueue inquiry notification email:", error);
-    }
-  } catch (err) {
-    console.error("Failed to prepare inquiry notification email:", err);
-  }
-}
-
 export const submitInquiry = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown): InquiryInput => {
     const result = inquirySchema.safeParse(raw);
@@ -170,9 +101,6 @@ export const submitInquiry = createServerFn({ method: "POST" })
       console.error("Failed to insert inquiry:", error);
       throw new Error("We couldn't submit your enquiry. Please try again.");
     }
-
-    // Fire-and-forget: enqueue notification email. Do not block on failure.
-    await enqueueInquiryNotification(data);
 
     return { ok: true as const };
   });
